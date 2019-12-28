@@ -24,28 +24,30 @@ import org.slf4j.LoggerFactory;
 @RestController
 @RequestMapping("/users/{id}/albums")
 public class AlbumsController {
-    
+
     @Autowired
-    AlbumsService albumsService;
+    private AlbumsService albumsService;
+
     Logger logger = LoggerFactory.getLogger(this.getClass());
-    @GetMapping( 
-            produces = { 
+
+    @GetMapping(
+            produces = {
                 MediaType.APPLICATION_JSON_VALUE,
                 MediaType.APPLICATION_XML_VALUE,
             })
     public List<AlbumResponseModel> userAlbums(@PathVariable String id) {
 
         List<AlbumResponseModel> returnValue = new ArrayList<>();
-        
+
         List<AlbumEntity> albumsEntities = albumsService.getAlbums(id);
-        
+
         if(albumsEntities == null || albumsEntities.isEmpty())
         {
             return returnValue;
         }
-        
+
         Type listType = new TypeToken<List<AlbumResponseModel>>(){}.getType();
- 
+
         returnValue = new ModelMapper().map(albumsEntities, listType);
         logger.info("Returning " + returnValue.size() + " albums");
         return returnValue;
